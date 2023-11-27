@@ -1,5 +1,5 @@
 <?php
-include_once ("finalOrdenado.php");
+include_once ("programaCelayesVicentin.php");
 /*
 La librería JugarWordix posee la definición de constantes y funciones necesarias
 para jugar al Wordix.
