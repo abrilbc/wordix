@@ -1,9 +1,9 @@
  <?php
 include_once("wordix.php");
 
-/** Función del Menú de Opciones.
+/** Función que muestra el menú de opciones.
  * Pregunta al usuario y devuelve la opción elegida
- * @return int
+ * @return int $opcionSeleccionada
  */
 
  function seleccionarOpcion() {
@@ -18,7 +18,7 @@ include_once("wordix.php");
     echo "7. Agregar una palabra de 5 letras a Wordix.\n";
     echo "8. Salir.\n\n";
     echo "OPCIÓN: ";
-    $opcionSeleccionada = trim(fgets(STDIN));
+    $opcionSeleccionada = intval(trim(fgets(STDIN))); //intval toma la parte entera de un valor numérico, en caso de que se ingrese un float
     echo "\n";
     if (!(is_numeric($opcionSeleccionada)) || $opcionSeleccionada <= 0 || $opcionSeleccionada > 8) {
         $opcionSeleccionada = -1;
@@ -442,8 +442,8 @@ function obtenerPuntajeWordix($intentos, $palabra) {
 
 // PROGRAMA PRINCIPAL
 /* MENÚ DE OPCIONES PARA INTERACTUAR */
-$palabrasActuales = cargarColeccionPalabras();
-$partidas = cargarPartidas();
+$palabrasWordix = cargarColeccionPalabras();
+$partidasWordix = cargarPartidas();
 do {
     $opcion = seleccionarOpcion();
     if ($opcion <> -1) {
@@ -452,26 +452,26 @@ do {
                 escribirVerde("JUGAR AL WORDIX CON UNA PALABRA ELEGIDA:");
                 echo "\n";
                 $jugador = solicitarJugador();
-                $palabraSelec = palabraSeleccionada($jugador, $palabrasActuales, $partidas);
+                $palabraSelec = palabraSeleccionada($jugador, $palabrasWordix, $partidasWordix);
                 $partida = jugarWordix($palabraSelec, $jugador);
-                $partidas = agregarPartida($partida, $partidas);
+                $partidasWordix = agregarPartida($partida, $partidasWordix);
                 break;
             case 2:
                 escribirVerde("JUGAR AL WORDIX CON UNA PALABRA ALEATORIA:");
                 echo "\n\n";
                 $jugador = solicitarJugador();
-                $palabraAleat = palabraAleatoria($jugador, $palabrasActuales, $partidas);
+                $palabraAleat = palabraAleatoria($jugador, $palabrasWordix, $partidas);
                 $partida = jugarWordix($palabraAleat, $jugador);
-                $partidas = agregarPartida($partida, $partidas);
+                $partidasWordix = agregarPartida($partida, $partidasWordix);
                 break;
             case 3:
-                print_r(mostrarPartida($partidas));
+                print_r(mostrarPartida($partidasWordix));
                 break;
             case 4:
                 do {
                     $jugador = solicitarJugador();
-                    if (verificarJugador($jugador, $partidas)) {
-                        $indicePartida = mostrarPrimerPartida($partidas, $jugador);
+                    if (verificarJugador($jugador, $partidasWordix)) {
+                        $indicePartida = mostrarPrimerPartida($partidasWordix, $jugador);
                         if($indicePartida == -1){
                             escribirRojo("Este jugador no ganó ninguna partida.");
                             echo "\n\n";
@@ -481,20 +481,20 @@ do {
                             escribirGris($jugador);
                             echo (": ");
                             echo "\n";
-                            print_r($partidas[$indicePartida]);
+                            print_r($partidasWordix[$indicePartida]);
                         }
                     }
                     else {
                         escribirRojo("Nombre inválido: El jugador no ha sido encontrado en el sistema.");
                         echo "\n";
                     }
-                } while (verificarJugador($jugador, $partidas) == false);
+                } while (verificarJugador($jugador, $partidasWordix) == false);
                 break;
             case 5:
                 do {
                     $jugador = solicitarJugador();
-                    if (verificarJugador($jugador, $partidas) == true) {
-                        $resumen = escribirResumenJugador($partidas, $jugador);
+                    if (verificarJugador($jugador, $partidasWordix) == true) {
+                        $resumen = escribirResumenJugador($partidasWordix, $jugador);
                         echo "*****************\n";
                         echo "Jugador: " . $resumen["jugador"];
                         echo "\nPartidas: " . $resumen["partidas"];
@@ -514,20 +514,20 @@ do {
                         escribirRojo("Nombre inválido: El jugador no ha sido encontrado en el sistema.");
                         echo "\n";
                     }
-                } while (verificarJugador($jugador, $partidas) == false);
+                } while (verificarJugador($jugador, $partidasWordix) == false);
                 break;
             case 6:
-                mostrarColeccionOrdenada($partidas);
+                mostrarColeccionOrdenada($partidasWordix);
                 break;
             case 7:
                 $palab = ingresarPalabra();
                 echo "Palabra a agregar: " . $palab . "\n\n";
-                $palabrasActuales = agregarPalabra($palabrasActuales, $palab);
+                $palabrasWordix = agregarPalabra($palabrasWordix, $palab);
                 escribirVerde("PALABRA AGREGADA EXITOSAMENTE");
                 echo "\n\n¿Desea ver la colección de palabras actuales?(s/n): ";
                 $rta = trim(fgets(STDIN));
                 if ($rta == "s" || $rta == "S") {
-                    print_r($palabrasActuales);
+                    print_r($palabrasWordix);
                 }
                 break;
             }
