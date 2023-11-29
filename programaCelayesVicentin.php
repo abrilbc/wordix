@@ -493,7 +493,7 @@ do {
             case 5:
                 do {
                     $jugador = solicitarJugador();
-                    if (verificarJugador($jugador, $partidasWordix) == true) {
+                    if (verificarJugador($jugador, $partidasWordix)) {
                         $resumen = escribirResumenJugador($partidasWordix, $jugador);
                         echo "*****************\n";
                         echo "Jugador: " . $resumen["jugador"];
