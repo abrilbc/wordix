@@ -26,11 +26,12 @@ const ESTADO_LETRA_PERTENECE = "pertenece";
 /***** DEFINICION DE FUNCIONES ********/
 /**************************************/
 
-/**
- *  ****COMPLETAR*****
+/** Esta función solicita un número entre un número máximo y otro mínimo, que ingresan a éste en forma de parámetros formales
+ * @param int $min 
+ * @param int $max 
+ * @return int $numero    
  */
-function solicitarNumeroEntr($min, $max)
-{
+function solicitarNumeroEntr($min, $max) {
     //int $numero
 
     $numero = trim(fgets(STDIN));
@@ -119,8 +120,8 @@ function escribirSegunEstado($texto, $estado)
     }
 }
 
-/**
- * ****COMPLETAR*****
+/** Función que escribe el mensaje de bienvenida al inicio del juego
+ * @param string $usuario
  */
 function escribirMensajeBienvenida($usuario)
 {
@@ -132,8 +133,8 @@ function escribirMensajeBienvenida($usuario)
 }
 
 
-/**
- * ****COMPLETAR*****
+/** Esta función verifica si una cadena (string) de letras contiene desde principio a fin son letras del alfabeto
+ * 
  */
 function esPalabra($cadena)
 {
@@ -142,7 +143,7 @@ function esPalabra($cadena)
     $esLetra = true;
     $i = 0;
     while ($esLetra && $i < $cantCaracteres) {
-        $esLetra =  ctype_alpha($cadena[$i]);
+        $esLetra =  ctype_alpha($cadena[$i]); //ctype_alpha verifica si la letra es parte del alfabeto; retorna true o false 
         $i++;
     }
     return $esLetra;
@@ -326,10 +327,6 @@ function esIntentoGanado($estructuraPalabraIntento)
 
     return $ganado;
 }
-
-/** Función que determina el puntaje de un jugador
- * @param 
- */
 
 /**
  * Dada una palabra para adivinar, juega una partida de wordix intentando que el usuario adivine la palabra.
