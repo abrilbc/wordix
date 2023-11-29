@@ -100,9 +100,9 @@ function primerLetra($cadena) {
     $esLetra = true;
     $esLetra =  ctype_alpha($cadena[0]);
         if($esLetra) {
-            $resp=true;
+            $resp = true;
         } else {
-        $resp=false;
+        $resp = false;
         }
     return $resp;
 }
@@ -111,20 +111,20 @@ function primerLetra($cadena) {
  * @return string
  */
 function solicitarJugador(){
-    $cont=0;
+    $band = 0;
     do {
-        if($cont == 0){
+        if ($band == 0) {
             echo "Ingrese el nombre del Jugador: ";
             $jug = strtolower(trim(fgets(STDIN)));
-        }else{
+        } else {
             escribirRojo ("El nombre ingresado no es válido.");
             echo "\nIngrese el nombre del Jugador nuevamente: ";
             $jug = strtolower(trim(fgets(STDIN)));
         }
         $esCaracter = primerLetra($jug);
-        $cont += 1;
-    } while(!($esCaracter)); 
-
+        $band += 1;
+    } while (!($esCaracter)); 
+    
     return $jug;
 }
 

@@ -12,4 +12,4 @@ Universidad Nacional del Comahue
 
 - **Celayes, Brisa Abril** - Legajo FAI-4923 - mail: brisacelayesabril@gmail.com - GitHub: abrilbc
 
-- **Vicentin Juan** - Legajo FAI-4923 - mail: - GitHub: juanfv5991
+- **Vicentin Juan** - Legajo FAI-4923 - mail: juan_lvp@outlook.com - GitHub: juanfv5991
