@@ -157,16 +157,16 @@ function solicitarNumeroEntre($min, $max) {
 function palabraSeleccionada($nombre, $arregloPalabras, $arregloPartidas) {
     // int $numero, $i
     // array $palabraSeleccion
-    $numero = solicitarNumeroEntre(1, count($arregloPalabras));
-    for ($i = 0; $i < count($arregloPartidas); $i++) {
-        while ($arregloPartidas[$i]["jugador"] == $nombre && $arregloPartidas[$i]["palabraWordix"] == $arregloPalabras[$numero-1]) {
-            escribirRojo("La palabra seleccionada ya ha sido jugada.");
-            echo "\n";
-            echo "Elija otro número: ";
-            $numero = trim(fgets(STDIN));
-        }
-    }
-        $palabraSeleccion = $arregloPalabras[$numero-1];
+    $i = 0;
+    $indicePalabra = solicitarNumeroEntre(1, count($arregloPalabras));
+    $condicion = (($arregloPartidas[$i]["jugador"] == $nombre) && ($arregloPartidas[$i]["palabraWordix"])); 
+        while (!($condicion)); {
+            
+            if (!$condicion) {
+                escribirRojo("PALABRA PREVIAMENTE UTILIZADA.");
+            }
+        } 
+        $palabraSeleccion = $arregloPalabras[$indicePalabra-1];
     return $palabraSeleccion;
 }
 
@@ -233,7 +233,10 @@ function escribirResumenJugador($arregloPartidas, $nombre) {
     // int $intento1, $intento2, $intento3, $intento4, $intento5, $intento6, $i, $partidasCont, $victorias, $puntajeTotal
     // float $porcentajeVictorias
     // array $arregloResumen
-
+    $arregloResumen=[];
+    $partidasCont = 0;
+    $victorias = 0;
+    $puntajeTotal = 0;
     $intento1 = 0;
     $intento2 = 0;
     $intento3 = 0;
@@ -242,51 +245,43 @@ function escribirResumenJugador($arregloPartidas, $nombre) {
     $intento6 = 0;
     for ($i = 0 ; $i < count($arregloPartidas) ; $i++) {
         if ($arregloPartidas[$i]["jugador"] == $nombre) {
-            if ($arregloPartidas[$i]["intentos"] == 1) {
-                $intento1++;
+            switch ($arregloPartidas[$i]["intentos"]) {
+                case 1: 
+                    $intento1++;
+                    break;
+                case 2: 
+                    $intento2++;
+                    break;
+                case 3: 
+                    $intento3++;
+                    break;
+                case 4: 
+                    $intento5++;
+                    break;
+                case 5: 
+                    $intento5++;
+                    break;
+                case 6: 
+                    $intento6++;
+                    break;
             }
-            elseif ($arregloPartidas[$i]["intentos"] == 2) {
-                $intento2++;
-            }
-            elseif ($arregloPartidas[$i]["intentos"] == 3) {
-                $intento3++;
-            }
-            elseif ($arregloPartidas[$i]["intentos"] == 4) {
-                $intento4++;
-            }
-            elseif ($arregloPartidas[$i]["intentos"] == 5) {
-                $intento5++;
-            }
-            elseif ($arregloPartidas[$i]["intentos"] == 6) {
-                $intento6++;
-            }
-        }
-    }
-    
-     $arregloResumen=[];
-    $partidasCont = 0;
-    $victorias = 0;
-    $puntajeTotal = 0;
-     for($i = 0; $i < count($arregloPartidas) ; $i++) {
-         if ($arregloPartidas[$i]["jugador"] == $nombre) {
-              $partidasCont++;
-              $puntajeTotal += $arregloPartidas[$i]["puntaje"];
-             if (($arregloPartidas[$i]["puntaje"]) > 0) {
+            $partidasCont++;
+            $puntajeTotal += $arregloPartidas[$i]["puntaje"];
+            if (($arregloPartidas[$i]["puntaje"]) > 0) {
                 $victorias++;
              }
          }
-     }
-     
-        $porcentajeVictorias = ($victorias/$partidasCont)*100;
-     $arregloResumen = [
+    }
+    $porcentajeVictorias = ($victorias/$partidasCont)*100;
+    $arregloResumen = [
         "jugador" => $nombre, "partidas" => $partidasCont, 
         "puntajeTotal" => $puntajeTotal, "victorias" => $victorias,
         "porcentaje" => $porcentajeVictorias,
         "intento1" => $intento1, "intento2" => $intento2, 
         "intento3" => $intento3, "intento4" => $intento4,
         "intento5" => $intento5, "intento6" => $intento6
-     ];
-     return $arregloResumen;  
+    ];
+    return $arregloResumen;  
 }
 
 /** Función que ordena a los jugadores alfabéticamente
@@ -357,26 +352,17 @@ function verificarPalabra($arregloPalabras, $palabra) {
 /** Función que pide una palabra de 5 letras y la retorna en mayúsculas
  * @return string
  */
-function ingresarPalabra() {
-    //string $palabra
-    //bool $condicion
-    do {
-        echo "Ingrese una palabra de 5 letras: ";
-        $palabra = strtoupper(trim(fgets(STDIN)));
-        
-        while ((strlen($palabra) != 5) || !esPalabra($palabra)) {
-            escribirRojo("ERROR: La palabra ingresada es inválida.");
-            echo "\nDebe ingresar una palabra de 5 letras:";
-            $palabra = strtoupper(trim(fgets(STDIN)));
+function pedirPalabra($arregloPalabras) {
+    $leerPalabra = leerPalabra5Letras();
+    $condicion = verificarPalabra($arregloPalabras, $leerPalabra);
+        while ($condicion){
+            escribirRojo("PALABRA EXISTENTE: Ingrese otra palabra.");
+            echo "\n";
+            $leerPalabra = leerPalabra5Letras();
+            $condicion = verificarPalabra($arregloPalabras, $leerPalabra);
         }
-        $condicion = verificarPalabra(cargarColeccionPalabras(), $palabra);
-        if ($condicion) {
-            escribirRojo("PALABRA EXISTENTE: Ingrese otra palabra");
-            echo "\n"; 
-        }
-    } while ($condicion == true);
 
-    return $palabra;
+    return $leerPalabra;
 }
 
 /** Función que agrega una palabra al arreglo previo de la colección
@@ -500,6 +486,7 @@ do {
             case 5:
                 do {
                     $jugador = solicitarJugador();
+                    echo "\n";
                     if (verificarJugador($jugador, $partidasWordix)) {
                         $resumen = escribirResumenJugador($partidasWordix, $jugador);
                         echo "*****************\n";
@@ -527,7 +514,7 @@ do {
                 mostrarColeccionOrdenada($partidasWordix);
                 break;
             case 7:
-                $palab = ingresarPalabra();
+                $palab = pedirPalabra($palabrasWordix);
                 echo "Palabra a agregar: " . $palab . "\n\n";
                 $palabrasWordix = agregarPalabra($palabrasWordix, $palab);
                 escribirVerde("PALABRA AGREGADA EXITOSAMENTE");
