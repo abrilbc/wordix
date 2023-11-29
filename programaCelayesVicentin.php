@@ -193,7 +193,7 @@ function palabraAleatoria($nombre, $arregloPalabras, $arregloPartidas) {
 }
 
 /** Función que muestra una partida basada en el número ingresado
- * @return array
+ * @return int
  */
 function mostrarPartida($coleccionDePartidas){
     //int $numMostrar
