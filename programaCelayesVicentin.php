@@ -199,9 +199,8 @@ function mostrarPartida($coleccionDePartidas){
     //int $numMostrar
     //array $partidaPrint
     echo "MOSTRAR PARTIDA: \n";
-    $numMostrar = solicitarNumeroEntre(1, count($coleccionDePartidas));
-    $partidaPrint = $coleccionDePartidas[$numMostrar-1];
-    return $partidaPrint;
+    $indiceMostrar = solicitarNumeroEntre(1, count($coleccionDePartidas));
+    return $indiceMostrar-1;
 }
 
 /** Función que muestra la primer partida ganada
@@ -214,19 +213,16 @@ function mostrarPrimerPartida($arregloPartidas, $nombre) {
     //bool $band
 
     $i = 0;
-    $retorna = -1;
-    $band = false;
-    while ($band == false && $i < count($arregloPartidas)) {
+    $indice = -1;
+    $encontrado = false;
+    while ($encontrado == false && $i < count($arregloPartidas)) {
         if(($arregloPartidas[$i]["jugador"] == $nombre) && ($arregloPartidas[$i]["puntaje"] > 0)) {
-            $band = true;
-        } else {
-            $i++;
+            $encontrado = true;
+            $indice = $i;
         }
+        $i++;
     }
-    if ($band == true) {
-        $retorna = $i;
-    }
-    return $retorna;
+    return $indice;
 }
 
 /** Función que muestra las estadisticas de un jugador ingresado
@@ -465,7 +461,18 @@ do {
                 $partidasWordix = agregarPartida($partida, $partidasWordix);
                 break;
             case 3:
-                print_r(mostrarPartida($partidasWordix));
+                $indiceGanador = mostrarPartida($partidasWordix);
+                $partidaPrint = $partidasWordix[$indiceGanador];
+                echo "\n******************************\n";
+                echo "Partida WORDIX ".($indiceGanador+1).": palabra ".$partidaPrint["palabraWordix"]."\n";
+                echo "Jugador: ".$partidaPrint["jugador"]."\n";
+                echo "Puntaje: ".$partidaPrint["puntaje"]."\n";
+                if($partidaPrint["puntaje"] == 0){
+                    echo "Intento: No adivinó la palabra.";
+                }else{
+                    echo "Intento: ".$partidaPrint["intentos"];
+                }
+                echo "\n******************************\n";
                 break;
             case 4:
                 do {
