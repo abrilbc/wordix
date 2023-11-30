@@ -95,29 +95,32 @@ function primerLetra($cadena) {
     return $resp;
 }
 
-/** Función que solicita el nombre de un jugador y lo retorna en mayúsculas
+/** Función que solicita el nombre de un jugador, lo valída y lo retorna en mayúsculas
  * @return string
  */
 function solicitarJugador(){
-    $band = 0;
+    // INT $contador
+    // STRING $jugador
+    // BOOL $esCaracter
+    $contador = 0;
     do {
-        if ($band == 0) {
+        if ($contador == 0) {
             echo "Ingrese el nombre del Jugador: ";
-            $jug = strtolower(trim(fgets(STDIN)));
+            $jugador = strtolower(trim(fgets(STDIN)));
         } else {
             escribirRojo ("El nombre ingresado no es válido.");
             echo "\nIngrese el nombre del Jugador nuevamente: ";
-            $jug = strtolower(trim(fgets(STDIN)));
+            $jugador = strtolower(trim(fgets(STDIN)));
         }
-        if(strlen($jug) !== 0){
-            $esCaracter = primerLetra($jug);
+        if(strlen($jugador) !== 0){
+            $esCaracter = primerLetra($jugador);
         }else{
             $esCaracter = false;
         }
-        $band += 1;
+        $contador += 1;
     } while (!($esCaracter)); 
     
-    return $jug;
+    return $jugador;
 }
 
 /** Función que verifica si una palabra ya ha sido jugada por el usuario.
