@@ -51,15 +51,15 @@ function cargarPartidas() {
  */
 function verificarJugador($nombre, $arregloPartidas) {
     // int $i
-    // bool $band
+    // bool $condicion
     $i = 0;
-    $band = false;
+    $condicion = false;
     for ($i = 0 ; $i < count($arregloPartidas) ; $i++) {
         if ($arregloPartidas[$i]["jugador"] == $nombre) {
-            $band = true;
+            $condicion = true;
         }
     }
-    return $band;
+    return $condicion;
 }
 
 /** Función de la colección inicial de palabras a jugar
@@ -84,15 +84,16 @@ function cargarColeccionPalabras()
  */
 function primerLetra($cadena) {
     // int $cantCaracteres, $i
-    // boolean $esLetra
+    // boolean $esLetra, $respuesta
+
     $esLetra = true;
     $esLetra =  ctype_alpha($cadena[0]);
         if($esLetra) {
-            $resp = true;
+            $respuesta = true;
         } else {
-        $resp = false;
+        $respuesta = false;
         }
-    return $resp;
+    return $respuesta;
 }
 
 /** Función que solicita el nombre de un jugador, lo valída y lo retorna en mayúsculas
@@ -323,15 +324,15 @@ function ordenarPorPalabra($a, $b) {
  * @return bool
  */
 function verificarPalabra($arregloPalabras, $palabra) {
-    //bool $band
+    //bool $condicion
     //int $i
-    $band = false;
+    $encontrada = false;
     for ($i = 0 ; $i < count($arregloPalabras) ; $i++) {
         if ($arregloPalabras[$i] == $palabra) {
-            $band = true;
+            $encontrada = true;
         }
     }
-    return $band;
+    return $encontrada;
 }
 
 /** Función que pide una palabra de 5 letras y la retorna en mayúsculas
@@ -356,8 +357,9 @@ function pedirPalabra($arregloPalabras) {
  * @return array
  */
 function agregarPalabra($arregloPalabras, $palabra){
-    $long = count($arregloPalabras);
-    $arregloPalabras[$long] = $palabra;
+    // INT $longitud
+    $longitud = count($arregloPalabras);
+    $arregloPalabras[$longitud] = $palabra;
     return $arregloPalabras;
 }
 
