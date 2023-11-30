@@ -426,7 +426,6 @@ do {
                 do {
                     $jugador = solicitarJugador();
                     $condicion = verificarJugador($jugador, $partidasWordix);
-                    echo "\n";
                     if ($condicion) {
                         $resumenJugador = arregloResumenJugador($partidasWordix, $jugador);
                         escribirResumenJugador($resumenJugador);
@@ -435,7 +434,7 @@ do {
                         escribirRojo("Nombre inválido: El jugador no ha sido encontrado en el sistema.");
                         echo "\n";
                     }
-                } while (verificarJugador($jugador, $partidasWordix) == false);
+                } while (!$condicion);
                 break;
             case 6:
                 mostrarColeccionOrdenada($partidasWordix);

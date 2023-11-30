@@ -40,7 +40,7 @@ function solicitarNumeroEntre($min, $max) {
         $numero  = $numero * 1; //con esta operación convierto el string en número.
     }
     while (!(is_numeric($numero) && (($numero == (int)$numero) && ($numero >= $min && $numero <= $max)))) {
-        escribirRojo("Número inválido.");
+        escribirRojo("Valor ingresado inválido.");
         echo "\nDebe ingresar un número entre " . $min . " y " . $max . ": ";
         $numero = trim(fgets(STDIN));
         if (is_numeric($numero)) {
