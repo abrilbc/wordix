@@ -33,12 +33,12 @@ function cargarPartidas() {
     // array $coleccionPartidas
     $coleccionPartidas = [];
     $coleccionPartidas[0] = ["palabraWordix"=> "QUESO" , "jugador" => "majo", "intentos"=> 0, "puntaje" => 0];
-    $coleccionPartidas[1] = ["palabraWordix"=> "CASAS" , "jugador" => "rudolf", "intentos"=> 3, "puntaje" => 14];
+    $coleccionPartidas[1] = ["palabraWordix"=> "CASAS" , "jugador" => "rudolf", "intentos"=> 0, "puntaje" => 0];
     $coleccionPartidas[2] = ["palabraWordix"=> "TINTO" , "jugador" => "derecha", "intentos"=> 4, "puntaje" => 14];
     $coleccionPartidas[3] = ["palabraWordix"=> "GOTAS" , "jugador" => "majo", "intentos"=> 0, "puntaje" => 0];
     $coleccionPartidas[4] = ["palabraWordix"=> "FIBRA" , "jugador" => "rudolf", "intentos"=> 3, "puntaje" => 13];
     $coleccionPartidas[5] = ["palabraWordix"=> "VERDE" , "jugador" => "pink2000", "intentos"=> 2, "puntaje" => 15];
-    $coleccionPartidas[6] = ["palabraWordix"=> "NAVES" , "jugador" => "majo", "intentos"=> 1, "puntaje" => 17];    
+    $coleccionPartidas[6] = ["palabraWordix"=> "NAVES" , "jugador" => "majo", "intentos"=> 0, "puntaje" => 0];    
     $coleccionPartidas[7] = ["palabraWordix"=> "TINTO" , "jugador" => "rudolf", "intentos"=> 1, "puntaje" => 17];
     $coleccionPartidas[8] = ["palabraWordix"=> "PISOS" , "jugador" => "pink2000", "intentos"=> 1, "puntaje" => 17];
     $coleccionPartidas[9] = ["palabraWordix"=> "GATOS" , "jugador" => "pink2000", "intentos"=> 6, "puntaje" => 11];
@@ -150,24 +150,29 @@ function solicitarNumeroEntre($min, $max) {
     return $numero;
 }
 
-/** Función que retorna una palabra seleccionada
+/** Función que retorna una palabra seleccionada luego de verificar si el jugador no la ha jugado
  * @param string $nombre
+ * @param array $arregloPalabras
+ * @param array $arregloPartidas
  * @return string $palabraSeleccion
  */
 function palabraSeleccionada($nombre, $arregloPalabras, $arregloPartidas) {
-    // int $numero, $i
-    // array $palabraSeleccion
     $i = 0;
-    $indicePalabra = solicitarNumeroEntre(1, count($arregloPalabras));
-    $condicion = (($arregloPartidas[$i]["jugador"] == $nombre) && ($arregloPartidas[$i]["palabraWordix"])); 
-        while (!($condicion)); {
-            
-            if (!$condicion) {
-                escribirRojo("PALABRA PREVIAMENTE UTILIZADA.");
-            }
-        } 
-        $palabraSeleccion = $arregloPalabras[$indicePalabra-1];
-    return $palabraSeleccion;
+    $palabraUsada = true;
+    $seleccionPalabra = "";
+    while ($palabraUsada == true && $i < count($arregloPartidas)) {
+        $indicePalabra = solicitarNumeroEntre(1, count($arregloPalabras));
+        $seleccionPalabra = $arregloPalabras[$indicePalabra-1];
+        $condicion = ($arregloPartidas[$i]["jugador"] == $nombre) && ($arregloPartidas[$i]["palabraWordix"] == $seleccionPalabra);
+        if (!($condicion)) {
+            escribirRojo("ERROR: ". $seleccionPalabra . "ya ha sido jugada por este usuario.");
+            $i++;
+        }
+        elseif ($condicion) {
+            $palabraUsada = false;
+        }
+    }
+    return $seleccionPalabra;
 }
 
 /** Función para que se seleccione aleatoriamente
@@ -183,7 +188,7 @@ function palabraAleatoria($nombre, $arregloPalabras, $arregloPartidas) {
     $numAleatorio = random_int($min, $max);
     $palabraAl = $arregloPalabras[$numAleatorio];
     for ($i = 0 ; $i < count($arregloPartidas) ; $i++) {
-        while ($arregloPartidas[$i]["jugador"] == $nombre && $arregloPartidas[$i]["palabraWordix"] == $arregloPalabras[$numAleatorio]){
+        if ($arregloPartidas[$i]["jugador"] == $nombre && $arregloPartidas[$i]["palabraWordix"] == $arregloPalabras[$numAleatorio]){
             echo $palabraAl . " ya ha sido jugada\n";
             $numAleatorio = random_int($min, $max);
         }
@@ -442,7 +447,7 @@ do {
                 escribirVerde("JUGAR AL WORDIX CON UNA PALABRA ALEATORIA:");
                 echo "\n\n";
                 $jugador = solicitarJugador();
-                $palabraAleat = palabraAleatoria($jugador, $palabrasWordix, $partidas);
+                $palabraAleat = palabraAleatoria($jugador, $palabrasWordix, $partidasWordix);
                 $partida = jugarWordix($palabraAleat, $jugador);
                 $partidasWordix = agregarPartida($partida, $partidasWordix);
                 break;
@@ -466,15 +471,20 @@ do {
                     if (verificarJugador($jugador, $partidasWordix)) {
                         $indicePartida = mostrarPrimerPartida($partidasWordix, $jugador);
                         if($indicePartida == -1){
-                            escribirRojo("Este jugador no ganó ninguna partida.");
+                            echo "\n";
+                            escribirRojo("el jugador ");
+                            escribirGris($jugador);
+                            escribirRojo(" no ganó ninguna partida");
                             echo "\n\n";
                         }
                         else {
-                            escribirVerde("PRIMERA PARTIDA GANADA POR ");
-                            escribirGris($jugador);
-                            echo (": ");
                             echo "\n";
-                            print_r($partidasWordix[$indicePartida]);
+                            echo "***************************\n";
+                            echo "Partida WORDIX ". $indicePartida+1 . ": palabra ". $partidasWordix[$indicePartida]["palabraWordix"] . "\n";
+                            echo "Jugador: " . $jugador . "\n";
+                            echo "Puntaje: " . $partidasWordix[$indicePartida]["puntaje"] . "\n";
+                            echo "Intento: Adivinó la palabra en " . $partidasWordix[$indicePartida]["intentos"] . " intentos.\n";
+                            echo "***************************\n";
                         }
                     }
                     else {
