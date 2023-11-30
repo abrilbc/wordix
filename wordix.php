@@ -26,24 +26,25 @@ const ESTADO_LETRA_PERTENECE = "pertenece";
 /***** DEFINICION DE FUNCIONES ********/
 /**************************************/
 
-/** Esta función solicita un número entre un número máximo y otro mínimo, que ingresan a éste en forma de parámetros formales
- * @param int $min 
- * @param int $max 
- * @return int $numero    
+/** Función que pregunta al usuario un número entre un rango de valores
+ * @param int $min
+ * @param int $max
+ * @return int $numero
  */
-function solicitarNumeroEntr($min, $max) {
-    //int $numero
-
+function solicitarNumeroEntre($min, $max) {
+    // int $numero
+    echo "Ingrese un número entre ". $min . " y " . $max . ": ";
     $numero = trim(fgets(STDIN));
 
     if (is_numeric($numero)) { //determina si un string es un número. puede ser float como entero.
         $numero  = $numero * 1; //con esta operación convierto el string en número.
     }
     while (!(is_numeric($numero) && (($numero == (int)$numero) && ($numero >= $min && $numero <= $max)))) {
-        echo "Debe ingresar un número entre " . $min . " y " . $max . ": ";
+        escribirRojo("Número inválido.");
+        echo "\nDebe ingresar un número entre " . $min . " y " . $max . ": ";
         $numero = trim(fgets(STDIN));
         if (is_numeric($numero)) {
-            $numero  = $numero * 1;
+            $numero = $numero * 1;
         }
     }
     return $numero;
@@ -326,6 +327,53 @@ function esIntentoGanado($estructuraPalabraIntento)
     }
 
     return $ganado;
+}
+
+
+/** Función que calcula el puntaje del jugador
+ * @param int $intentos
+ * @param string $palabra
+ * @return int $puntajeTotal
+ */
+function obtenerPuntajeWordix($intentos, $palabra) {
+    // int $intentosMaximos, $puntajeBase, $puntajeIntentos, $cantLetras, $cantVocales, $consAntesM, $consPostM, $puntAntesM, $puntPostM, $puntajeFinal
+    // string $letra
+
+    //Puntaje basado en los intentos
+    $intentosMaximos = 6;
+    $puntajeBase = 0;
+    if ($intentos != 0) {
+        while ($intentos <= $intentosMaximos) {
+            $puntajeBase++;
+            $intentosMaximos--;
+        }
+        $puntajeIntentos = $puntajeBase;
+
+    //Puntaje basado en la palabra (vocales, consonantes antes y despúes de "M")
+        $cantLetras = strlen($palabra);
+        $cantVocales = 0;
+        $consAntesM = 0;
+        $consPostM = 0;
+        for($i = 0 ; $i < $cantLetras ; $i++) {
+            $letra = $palabra[$i];
+            //condición para las vocales (1 punto)
+            if (in_array($letra, ["A", "E", "I", "O", "U"])) { //funcion in_array que verifica si el elemento está dentro de los datos del arreglo comparado
+                $cantVocales++;
+            }
+            //condición para las consonantes anteriores a M (inclusive)(2 puntos)
+            if(in_array($letra, ["B", "C", "D", "F", "G", "H","J", "K", "L", "M"])) {
+                $consAntesM++;
+            }
+            //condición para las consonantes posteriores a M (3 puntos);
+            if(in_array($letra, ["N", "Ñ", "P", "Q", "R", "S", "T", "V", "W", "X", "Y", "Z"])) {
+                $consPostM++;
+            }
+        }
+        $puntAntesM = $consAntesM * 2;
+        $puntPostM = $consPostM * 3;
+        $puntajeFinal = $puntajeIntentos + $puntAntesM + $puntPostM + $cantVocales; 
+    }
+    return $puntajeFinal;
 }
 
 /**
