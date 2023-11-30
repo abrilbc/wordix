@@ -109,7 +109,11 @@ function solicitarJugador(){
             echo "\nIngrese el nombre del Jugador nuevamente: ";
             $jug = strtolower(trim(fgets(STDIN)));
         }
-        $esCaracter = primerLetra($jug);
+        if(strlen($jug) !== 0){
+            $esCaracter = primerLetra($jug);
+        }else{
+            $esCaracter = false;
+        }
         $band += 1;
     } while (!($esCaracter)); 
     
