@@ -78,7 +78,7 @@ function cargarColeccionPalabras()
 }
 
 
-/** Función que determina si el primer cáracter de el nombre de un jugador es letra o no
+/** Función que determina si el primer cáracter de el nombre ingresado por un jugador es letra o no
  * @param string $cadena
  * @return bool
  */
@@ -109,7 +109,6 @@ function solicitarJugador() {
             escribirRojo("El nombre ingresado no es válido.");
             echo "\n";
         }
-
     } while (!$esCaracter);
 
     return strtolower($jugador);
@@ -141,9 +140,9 @@ function verificarPalabraJugada($arregloPartidas, $nombre, $palabraSeleccionada)
 function palabraAleatoria($nombre, $arregloPalabras, $arregloPartidas) {
     // int $min, $max, $numAleatorio, $i
     $indiceAleatorio = random_int(0, count($arregloPalabras) - 1);
+
     while (verificarPalabraJugada($arregloPartidas, $nombre, $arregloPalabras[($indiceAleatorio)])) {
         $indiceAleatorio = random_int(0, (count($arregloPalabras) - 1));
-        echo $indiceAleatorio . "\n";
     }
     return $arregloPalabras[$indiceAleatorio];
 }
@@ -349,6 +348,8 @@ function verificarPalabra($arregloPalabras, $palabra) {
  * @return string
  */
 function pedirPalabra($arregloPalabras) {
+    // string $leerPalabra
+    // bool $condicion
     $leerPalabra = leerPalabra5Letras();
     $condicion = verificarPalabra($arregloPalabras, $leerPalabra);
         while ($condicion){
@@ -387,9 +388,10 @@ do {
                 $jugador = solicitarJugador();
                 $indicePalabraSeleccionada = solicitarNumeroEntre(1, count($palabrasWordix));
                 $palabraSeleccionada = $palabrasWordix[($indicePalabraSeleccionada)-1];
+                /* VERIFICA QUE LA PALABRA NO HAYA SIDO JUGADA POR EL USUARIO */
                 while (verificarPalabraJugada($partidasWordix, $jugador, $palabraSeleccionada) == true) {
                     escribirRojo("ERROR: La palabra ya ha sido jugada por el usuario.");
-                    echo "\n";
+                    echo "\n";  
                     $indicePalabraSeleccionada = solicitarNumeroEntre(1, count($palabrasWordix));
                     $palabraSeleccionada = $palabrasWordix[($indicePalabraSeleccionada)-1];
                 }
