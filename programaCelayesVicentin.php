@@ -279,26 +279,6 @@ function escribirResumenJugador($resumen) {
     echo "*****************\n";
 }
 
-/** Función que ordena a los jugadores alfabéticamente
- * @param array $a
- * @param array $b
- * @return int 
- */
-function ordenarPorNombre($a, $b) {
-    // Esta función ordena un arreglo alfabeticamente poniendo como prioridad el jugador
-    // int $valor 
-    $valor = 1;
-    if ($a["jugador"] == $b["jugador"]) {
-        $valor = 0;
-    }
-    elseif ($a["jugador"] < $b["jugador"]) { 
-        $valor = -1;
-    }
-    else {
-        $valor = 1;
-    }
-    return $valor;
-}
 
 /** Función que ordena a los jugadores alfabéticamente por nombre 1ero y luego los ordena alfabéticamente por palabra
  * @param array $a
@@ -314,6 +294,10 @@ function ordenarPorPalabra($a, $b) {
         }else{
             $valor = 1;
         }
+    }elseif($a["jugador"] < $b["jugador"]){
+        $valor = -1;      
+    }else{
+        $valor = 1;
     }
     return $valor;
 }
@@ -322,7 +306,6 @@ function ordenarPorPalabra($a, $b) {
   * @param array $arregloPartidas
   */
   function mostrarColeccionOrdenada($arregloPartidas){
-    uasort($arregloPartidas, 'ordenarPorNombre');
     uasort($arregloPartidas, 'ordenarPorPalabra');
     print_r($arregloPartidas);   
 }
