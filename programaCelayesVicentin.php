@@ -85,7 +85,6 @@ function cargarColeccionPalabras()
 function primerLetra($cadena) {
     // int $cantCaracteres, $i
     // boolean $esLetra, $respuesta
-
     $esLetra = true;
     $esLetra =  ctype_alpha($cadena[0]);
         if($esLetra) {
@@ -96,32 +95,24 @@ function primerLetra($cadena) {
     return $respuesta;
 }
 
-/** Función que solicita el nombre de un jugador, lo valída y lo retorna en mayúsculas
+/** Función que solicita el nombre de un jugador, lo valida y lo retorna en minúsculas
  * @return string
  */
-function solicitarJugador(){
-    // INT $contador
-    // STRING $jugador
-    // BOOL $esCaracter
-    $contador = 0;
+function solicitarJugador() {
     do {
-        if ($contador == 0) {
-            echo "Ingrese el nombre del Jugador: ";
-            $jugador = strtolower(trim(fgets(STDIN)));
-        } else {
-            escribirRojo ("El nombre ingresado no es válido.");
-            echo "\nIngrese el nombre del Jugador nuevamente: ";
-            $jugador = strtolower(trim(fgets(STDIN)));
+        echo "Ingrese el nombre del Jugador: ";
+        $jugador = trim(fgets(STDIN));
+
+        $esCaracter = !empty($jugador) && primerLetra($jugador); //función empty para verificar que lo ingresado no sea un vacío 
+
+        if (!$esCaracter) {
+            escribirRojo("El nombre ingresado no es válido.");
+            echo "\n";
         }
-        if(strlen($jugador) !== 0){
-            $esCaracter = primerLetra($jugador);
-        }else{
-            $esCaracter = false;
-        }
-        $contador += 1;
-    } while (!($esCaracter)); 
-    
-    return $jugador;
+
+    } while (!$esCaracter);
+
+    return strtolower($jugador);
 }
 
 /** Función que verifica si una palabra ya ha sido jugada por el usuario.
@@ -141,7 +132,7 @@ function verificarPalabraJugada($arregloPartidas, $nombre, $palabraSeleccionada)
     return $encontrada;
 }
 
-/** Función para que se seleccione aleatoriamente
+/** Función para que se seleccione una palabra de la coleccion de palabras aleatoriamente
  * @param string $nombre
  * @param array $arregloPalabras
  * @param array $arregloPartidas
@@ -157,10 +148,11 @@ function palabraAleatoria($nombre, $arregloPalabras, $arregloPartidas) {
     return $arregloPalabras[$indiceAleatorio];
 }
 
-/** Función que muestra una partida basada en el número ingresado
+/** Función que devuelve el índice de una partida en la coleccion de partidas basado en el número ingresado por el usuario
+ * @param array $coleccionDePartidas
  * @return int
  */
-function mostrarPartida($coleccionDePartidas){
+function buscarPartida($coleccionDePartidas){
     //int $numMostrar
     //array $partidaPrint
     echo "MOSTRAR PARTIDA: \n";
@@ -168,7 +160,25 @@ function mostrarPartida($coleccionDePartidas){
     return $indiceMostrar-1;
 }
 
+/** Función que muestra la partida pedida por el usuario en la función buscarPartida
+ * @param int $indiceGanador
+ * @param array $coleccionPartidas
+ */
+function mostrarPartidaBuscada($coleccionPartidas, $indice) {
+                echo "\n******************************\n";
+                echo "Partida WORDIX " . ($indice+1) . ": palabra " . $coleccionPartidas[$indice]["palabraWordix"] . "\n";
+                echo "Jugador: " . $coleccionPartidas[$indice]["jugador"]."\n";
+                echo "Puntaje: " . $coleccionPartidas[$indice]["puntaje"]."\n";
+                    if($coleccionPartidas[$indice]["puntaje"] == 0){
+                        echo "Intento: No adivinó la palabra.";
+                    } else {
+                        echo "Intento: " . $coleccionPartidas[$indice]["intentos"];
+                    }
+                echo "\n******************************\n";
+}
+
 /** Función que retorna el índice de la primer partida ganada para luego mostrarlo con la función mostrarPartidaGanada
+ * Si no se encuentran partidas ganadas, retorna -1
  * @param $arregloPartidas
  * @param $nombre
  * @return int
@@ -189,7 +199,7 @@ function indicePrimerPartidaGanadora($arregloPartidas, $nombre) {
     return $indice;
 }
 
-/** Función que muestra la primer partida ganada de un jugador
+/** Función que muestra la primer partida ganada de un jugador, o muestra un cartel diciendo que no ganó ninguna partida.
  * @param $indicePartida
  */
 function mostrarPartidaGanada($indicePartida, $arregloPatidas, $nombre) {
@@ -211,7 +221,7 @@ function mostrarPartidaGanada($indicePartida, $arregloPatidas, $nombre) {
     }
 }
 
-/** Función que muestra las estadisticas de un jugador ingresado
+/** Función que devuelve un arreglo de las estadisticas de un jugador ingresado
  * @param array $arregloPartidas
  * @param string $nombre
  */
@@ -288,15 +298,15 @@ function escribirResumenJugador($resumen) {
 }
 
 
-/** Función que ordena a los jugadores alfabéticamente por nombre 1ero y luego los ordena alfabéticamente por palabra
+/** Función que ordena a los jugadores alfabéticamente. Primero por nombre y luego los ordena alfabéticamente por palabra.
  * @param array $a
  * @param array $b
  * @return int 
  */
-function ordenarPorPalabra($a, $b) {
+function ordenarAlfabeticamente($a, $b) {
     //int $valor
     $valor = 0;
-    if($a["jugador"] == $b["jugador"]){ //Consideramos que los jugadores ya están ordenados por la función anterior
+    if($a["jugador"] == $b["jugador"]){
         if($a["palabraWordix"] < $b["palabraWordix"]){
             $valor = -1;
         }else{
@@ -314,7 +324,7 @@ function ordenarPorPalabra($a, $b) {
   * @param array $arregloPartidas
   */
   function mostrarColeccionOrdenada($arregloPartidas){
-    uasort($arregloPartidas, 'ordenarPorPalabra');
+    uasort($arregloPartidas, 'ordenarAlfabeticamente');
     print_r($arregloPartidas);   
 }
  
@@ -391,23 +401,12 @@ do {
                 echo "\n\n";
                 $jugador = solicitarJugador();
                 $palabraAleat = palabraAleatoria($jugador, $palabrasWordix, $partidasWordix);
-                echo $palabraAleat . "\n";
                 $partida = jugarWordix($palabraAleat, $jugador);
                 $partidasWordix[count($partidasWordix)] = $partida;
                 break;
             case 3:
-                $indiceGanador = mostrarPartida($partidasWordix);
-                $partidaPrint = $partidasWordix[$indiceGanador];
-                echo "\n******************************\n";
-                echo "Partida WORDIX ".($indiceGanador+1).": palabra ".$partidaPrint["palabraWordix"]."\n";
-                echo "Jugador: ".$partidaPrint["jugador"]."\n";
-                echo "Puntaje: ".$partidaPrint["puntaje"]."\n";
-                if($partidaPrint["puntaje"] == 0){
-                    echo "Intento: No adivinó la palabra.";
-                }else{
-                    echo "Intento: ".$partidaPrint["intentos"];
-                }
-                echo "\n******************************\n";
+                $indicePartida = buscarPartida($partidasWordix);
+                mostrarPartidaBuscada($partidasWordix, $indicePartida);
                 break;
             case 4:
                 do {
@@ -443,7 +442,7 @@ do {
                 break;
             case 7:
                 $palab = pedirPalabra($palabrasWordix);
-                echo "Palabra a agregar: " . $palab . "\n\n";
+                echo "Palabra a agregar: " . $palab . "\n";
                 $palabrasWordix = agregarPalabra($palabrasWordix, $palab);
                 escribirVerde("PALABRA AGREGADA EXITOSAMENTE");
                 echo "\n\n¿Desea ver la colección de palabras actuales?(s/n): ";
