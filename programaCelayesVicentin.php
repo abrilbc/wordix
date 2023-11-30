@@ -230,7 +230,7 @@ function arregloResumenJugador($arregloPartidas, $nombre) {
     // float $porcentajeVictorias
     // array $arregloResumen
     $arregloResumen=[];
-    $partidasCont = 0;
+    $contadorPartidas = 0;
     $victorias = 0;
     $puntajeTotal = 0;
     $intento1 = 0;
@@ -261,18 +261,18 @@ function arregloResumenJugador($arregloPartidas, $nombre) {
                     $intento6++;
                     break;
             }
-            $partidasCont++;
+            $contadorPartidas++;
             $puntajeTotal += $arregloPartidas[$i]["puntaje"];
             if (($arregloPartidas[$i]["puntaje"]) > 0) {
                 $victorias++;
-             }
-         }
+            }
+        }
     }
-    $porcentajeVictorias = ($victorias/$partidasCont)*100;
+    $porcentajeVictorias = ($victorias/$contadorPartidas)*100;
     $arregloResumen = [
-        "jugador" => $nombre, "partidas" => $partidasCont, 
+        "jugador" => $nombre, "partidas" => $contadorPartidas, 
         "puntajeTotal" => $puntajeTotal, "victorias" => $victorias,
-        "porcentaje" => $porcentajeVictorias,
+        "porcentajeVictorias" => $porcentajeVictorias,
         "intento1" => $intento1, "intento2" => $intento2, 
         "intento3" => $intento3, "intento4" => $intento4,
         "intento5" => $intento5, "intento6" => $intento6
@@ -289,7 +289,7 @@ function escribirResumenJugador($resumen) {
     echo "\nPartidas: " . $resumen["partidas"];
     echo "\nPuntaje Total: " . $resumen["puntajeTotal"];
     echo "\nVictorias: " . $resumen["victorias"];
-    echo "\nPorcentaje Victorias: " . $resumen["porcentaje"] . "%";
+    echo "\nPorcentaje Victorias: " . $resumen["porcentajeVictorias"] . "%";
     echo "\nAdivinadas: \n";
     for ($i = 1 ; $i < 7 ; $i++) {
     echo "          Intento ". $i . ": " . $resumen["intento".$i] . "\n";
